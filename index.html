@@ -56,7 +56,7 @@
     </header>
 
     <div id="game-container">
-        <div id="game-container-text" class="container-message">Waiting for Nostalgist library...</div>
+        <div id="game-container-text" class="container-message">Checking for library files...</div>
     </div>
     
     <div class="mt-6 p-4 bg-gray-700 rounded-xl shadow-lg w-full max-w-lg">
@@ -78,12 +78,24 @@
             const YOUR_CORE = 'genesis_plus_gx'; 
             const YOUR_ROM_FILENAME = 'dirtyhands.bin'; 
             const YOUR_ROM_URL = `./${YOUR_ROM_FILENAME}`; 
+            const NOSTALGIST_LIB_PATH = './nostalgist.js';
             // ---------------------
 
             const container = document.getElementById('game-container');
             const MAX_WAIT_TIME = 10000; // 10 seconds timeout
             let totalWaitTime = 0;
             
+            // Function to display an error
+            const displayError = (message, details) => {
+                container.innerHTML = `
+                    <div class="container-message text-red-500">
+                        <p class="font-bold text-xl">Fatal Error</p>
+                        <p class="text-lg mt-2">${message}</p>
+                        <p class="text-xs mt-3 text-red-400">${details}</p>
+                    </div>
+                `;
+            };
+
             // 1. Function to attempt launching the emulator
             function launchEmulator() {
                 container.innerHTML = `<div id="game-container-status" class="container-message">Initializing ${YOUR_CORE} core...</div>`;
@@ -103,7 +115,7 @@
                             <p class="font-bold text-lg">Emulator Launch Failed</p>
                             <p class="text-sm mt-2">Possible Issues:</p>
                             <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
-                                <li>**Missing File:** Is the ROM file named **${YOUR_ROM_FILENAME}** and uploaded to your GitHub repo root?</li>
+                                <li>**Missing ROM:** Is **${YOUR_ROM_FILENAME}** uploaded to your GitHub repo root?</li>
                                 <li>**Core Load:** The core failed to download (this requires a network connection).</li>
                             </ul>
                             <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
@@ -119,12 +131,10 @@
                     launchEmulator();
                 } else if (totalWaitTime >= MAX_WAIT_TIME) {
                     // Timeout
-                    container.innerHTML = `
-                        <div class="container-message text-red-400">
-                            <p class="font-bold text-xl">Fatal Error: Library Timeout</p>
-                            <p class="text-sm mt-2">The **nostalgist.js** file could not be loaded or executed. Did you upload it?</p>
-                        </div>
-                    `;
+                    displayError(
+                        "Library Execution Failed",
+                        `The nostalgist.js file was found but failed to execute within 10 seconds. Check its contents for errors.`
+                    );
                 } else {
                     // Not ready, keep waiting
                     totalWaitTime += 100;
@@ -132,8 +142,32 @@
                 }
             }
 
-            // 3. Start the polling process
-            waitForNostalgist();
+            // 3. Proactive check for the nostalgist.js file presence
+            fetch(NOSTALGIST_LIB_PATH)
+                .then(response => {
+                    if (response.status === 404) {
+                        displayError(
+                            "nostalgist.js File Not Found (404)",
+                            `Please ensure a file named **nostalgist.js** is uploaded to the EXACT root directory of your GitHub repository.`
+                        );
+                    } else if (!response.ok) {
+                        displayError(
+                            "nostalgist.js Download Failed",
+                            `Could not access the file at ${NOSTALGIST_LIB_PATH}. Status: ${response.status} ${response.statusText}`
+                        );
+                    } else {
+                        // The file exists and is accessible. Now start waiting for it to execute.
+                        document.getElementById('game-container-text').textContent = "Library file found. Waiting for execution...";
+                        waitForNostalgist();
+                    }
+                })
+                .catch(error => {
+                    // This catches network errors (CORS, firewall, etc.)
+                    displayError(
+                        "Network/Access Error",
+                        `Cannot access ${NOSTALGIST_LIB_PATH}. Check your network and CORS settings. Error: ${error.message}`
+                    );
+                });
         });
     </script>
 
