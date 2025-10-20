@@ -68,8 +68,7 @@
         </ul>
     </div>
 
-    <!-- Nostalgist.js Library -->
-    <script src="https://unpkg.com/nostalgist@latest/dist/nostalgist.umd.js"></script>
+    <!-- The Nostalgist.js Library is now loaded dynamically in the script below -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -77,54 +76,67 @@
             const YOUR_CORE = 'genesis_plus_gx'; 
             // The required direct download URL for your Google Drive file ID
             const YOUR_ROM_URL = 'https://drive.google.com/uc?export=download&id=1aUKIru_mEuhUolGIRzpTXZOWAR30AUY-'; 
+            const NOSTALGIST_CDN = 'https://unpkg.com/nostalgist@latest/dist/nostalgist.umd.js';
             // ---------------------
 
             const container = document.getElementById('game-container');
             
-            // Check if the nostalgist object loaded correctly
-            if (typeof nostalgist === 'undefined') {
-                container.innerHTML = `
-                    <div class="container-message text-red-400">
-                        <p class="font-bold text-xl">Preview Error: Script Blocked</p>
-                        <p class="text-sm mt-2">
-                            The code editor environment is blocking the Nostalgist.js script. 
-                            <br>This file is ready for **external hosting**.
-                        </p>
-                        <p class="text-sm mt-3 text-blue-300">
-                            **Next Step:** Upload this file to GitHub Pages and embed the resulting URL.
-                        </p>
-                    </div>
-                `;
-                return;
+            // 1. Function to attempt launching the emulator
+            function launchEmulator() {
+                // Replace the initial message with the actual launch process message
+                container.innerHTML = `<div id="game-container-status" class="container-message">Initializing ${YOUR_CORE} core...</div>`;
+
+                nostalgist.launch({
+                    core: YOUR_CORE,
+                    rom: YOUR_ROM_URL, 
+                    element: container,
+                })
+                .then(() => {
+                    console.log('Nostalgist launched successfully!');
+                    // The emulator screen takes over the container on success
+                })
+                .catch(error => {
+                    console.error('Failed to launch Nostalgist:', error);
+                    // Show a detailed error if launching fails (e.g., ROM or Core issues)
+                    container.innerHTML = `
+                        <div class="container-message text-red-500">
+                            <p class="font-bold text-lg">Emulator Launch Failed</p>
+                            <p class="text-sm mt-2">Possible Issues (Check AFTER Hosting):</p>
+                            <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
+                                <li>Google Drive File: Is it set to **"Anyone with the link"**?</li>
+                                <li>ROM File: Is it a valid Mega Drive ROM (e.g., .bin, .md)?</li>
+                            </ul>
+                            <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
+                        </div>
+                    `;
+                });
             }
 
-            // Replace the initial message with the actual launch process message
-            container.innerHTML = `<div id="game-container-status" class="container-message">Initializing ${YOUR_CORE} core...</div>`;
+            // 2. Function to dynamically load the Nostalgist script
+            function loadScript(url, callback) {
+                const script = document.createElement('script');
+                script.src = url;
+                
+                // This callback guarantees 'nostalgist' is defined before launchEmulator runs
+                script.onload = callback; 
 
-            nostalgist.launch({
-                core: YOUR_CORE,
-                rom: YOUR_ROM_URL, 
-                element: container,
-            })
-            .then(() => {
-                console.log('Nostalgist launched successfully!');
-                // If successful, the emulator screen takes over the container
-            })
-            .catch(error => {
-                console.error('Failed to launch Nostalgist:', error);
-                // Clear the container and show a detailed error
-                container.innerHTML = `
-                    <div class="container-message text-red-500">
-                        <p class="font-bold text-lg">Emulator Launch Failed</p>
-                        <p class="text-sm mt-2">Possible Issues (Check AFTER Hosting):</p>
-                        <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
-                            <li>Google Drive File: Is it set to **"Anyone with the link"**?</li>
-                            <li>ROM File: Is it a valid Mega Drive ROM (e.g., .bin, .md)?</li>
-                        </ul>
-                        <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
-                    </div>
-                `;
-            });
+                // Handle script loading failure (e.g., if the CDN is blocked/down)
+                script.onerror = () => {
+                    container.innerHTML = `
+                        <div class="container-message text-red-400">
+                            <p class="font-bold text-xl">Fatal Error: Script Blocked</p>
+                            <p class="text-sm mt-2">
+                                Failed to load the Nostalgist.js library. 
+                                <br>Check your network or firewall settings.
+                            </p>
+                        </div>
+                    `;
+                };
+                document.head.appendChild(script);
+            }
+
+            // 3. Start the entire process: Load the script, then launch the emulator.
+            loadScript(NOSTALGIST_CDN, launchEmulator);
         });
     </script>
 
