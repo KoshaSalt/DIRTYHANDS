@@ -51,7 +51,7 @@
         <h1 class="text-4xl font-extrabold text-blue-400">DIRTYHANDS Mega Drive Emulator</h1>
         <p class="text-lg mt-2 text-gray-300">Play the demo of DIRTYHANDS directly in your browser.</p>
         <p class="text-sm mt-1 text-red-400 font-semibold">
-            **Action Required:** Please upload the ROM file (`dirtyhands.bin` or similar) to your GitHub repo root.
+            **FINAL ACTION REQUIRED:** Please upload the ROM file (`dirtyhands.bin`) AND the **nostalgist.js** library file to your GitHub repo root.
         </p>
     </header>
 
@@ -68,8 +68,9 @@
         </ul>
     </div>
 
-    <!-- STEP 1: Load the Nostalgist.js library statically for simplicity -->
-    <script src="https://unpkg.com/nostalgist@latest/dist/nostalgist.umd.js"></script>
+    <!-- STEP 1: Load the Nostalgist.js library LOCALLY -->
+    <!-- You MUST upload nostalgist.js to your GitHub repo root -->
+    <script src="./nostalgist.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -103,7 +104,7 @@
                             <p class="text-sm mt-2">Possible Issues:</p>
                             <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
                                 <li>**Missing File:** Is the ROM file named **${YOUR_ROM_FILENAME}** and uploaded to your GitHub repo root?</li>
-                                <li>ROM Format: Is the file a valid Mega Drive ROM (.bin, .md, etc.)?</li>
+                                <li>**Core Load:** The core failed to download (this requires a network connection).</li>
                             </ul>
                             <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
                         </div>
@@ -121,7 +122,7 @@
                     container.innerHTML = `
                         <div class="container-message text-red-400">
                             <p class="font-bold text-xl">Fatal Error: Library Timeout</p>
-                            <p class="text-sm mt-2">Nostalgist.js failed to load after 10 seconds. Check network or CDN access.</p>
+                            <p class="text-sm mt-2">The **nostalgist.js** file could not be loaded or executed. Did you upload it?</p>
                         </div>
                     `;
                 } else {
