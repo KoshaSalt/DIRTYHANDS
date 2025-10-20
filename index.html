@@ -117,8 +117,26 @@
                 const script = document.createElement('script');
                 script.src = url;
                 
-                // This callback guarantees 'nostalgist' is defined before launchEmulator runs
-                script.onload = callback; 
+                // FIX: Use setTimeout(0) to defer the callback to the end of the current task queue.
+                // This ensures the nostalgist global object is registered before we try to use it.
+                script.onload = () => {
+                    setTimeout(() => {
+                        if (typeof nostalgist !== 'undefined') {
+                            callback();
+                        } else {
+                            // Secondary fallback if onload fired but global variable is missing
+                            container.innerHTML = `
+                                <div class="container-message text-red-400">
+                                    <p class="font-bold text-xl">Fatal Error: Script Registration Failed</p>
+                                    <p class="text-sm mt-2">The Nostalgist library loaded but did not define 'nostalgist'.</p>
+                                    <p class="text-sm mt-3 text-blue-300">
+                                        **Next Step:** Ensure this file is hosted on a standard web server (like GitHub Pages).
+                                    </p>
+                                </div>
+                            `;
+                        }
+                    }, 0);
+                }; 
 
                 // Handle script loading failure (e.g., if the CDN is blocked/down)
                 script.onerror = () => {
