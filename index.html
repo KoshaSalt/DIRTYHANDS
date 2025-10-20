@@ -69,7 +69,7 @@
     </div>
 
     <!-- STEP 1: Load the Nostalgist.js library from the primary CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/nostalgist@latest/dist/nostalgist.umd.js"></script>
+    <script src="https://unpkg.com/nostalgist"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -114,7 +114,8 @@
                             <p class="text-sm mt-2">Possible Issues:</p>
                             <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
                                 <li>**Missing ROM:** Is **${YOUR_ROM_FILENAME}** uploaded to your GitHub repo root?</li>
-                                <li>**Core/Assets:** The core failed to download (this requires a network connection to the CDN).</li>
+                                
+**Core/Assets:** The Core failed to download (this requires a network connection to the CDN).
                             </ul>
                             <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
                         </div>
@@ -147,3 +148,4 @@
 
 </body>
 </html>
+
