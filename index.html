@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRTYHANDS Mega Drive Demo</title>
+    <!-- We'll use a simple, clean aesthetic -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1f2937; /* Dark gray background */
+            font-family: 'Inter', sans-serif;
+            color: #f3f4f6;
+            padding: 20px;
+        }
+        /* Style the actual emulator container */
+        #game-container {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            aspect-ratio: 4/3; /* Standard resolution aspect ratio */
+            background-color: #000;
+            border: 8px solid #000;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            overflow: hidden; /* Ensure content stays within borders */
+        }
+        /* Center message before loading */
+        .container-message {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 1.25rem;
+            color: #9ca3af;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="text-center mb-8">
+        <h1 class="text-4xl font-extrabold text-blue-400">DIRTYHANDS Mega Drive Emulator</h1>
+        <p class="text-lg mt-2 text-gray-300">Play the demo of DIRTYHANDS directly in your browser.</p>
+        <p class="text-sm mt-1 text-red-400 font-semibold">
+            Please ensure your ROM is publicly accessible from Google Drive.
+        </p>
+    </header>
+
+    <div id="game-container">
+        <div id="game-container-text" class="container-message">Loading Emulator...</div>
+    </div>
+    
+    <div class="mt-6 p-4 bg-gray-700 rounded-xl shadow-lg w-full max-w-lg">
+        <h2 class="text-xl font-bold text-gray-100 mb-2">Controls:</h2>
+        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
+            <li>**D-Pad/Movement:** Arrow Keys (Up, Down, Left, Right)</li>
+            <li>**A/B/C Buttons:** Z, X, C</li>
+            <li>**Start Button:** Enter/Return</li>
+        </ul>
+    </div>
+
+    <!-- Nostalgist.js Library -->
+    <script src="https://unpkg.com/nostalgist@latest/dist/nostalgist.umd.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            const YOUR_CORE = 'genesis_plus_gx'; 
+            // The required direct download URL for your Google Drive file ID
+            const YOUR_ROM_URL = 'https://drive.google.com/uc?export=download&id=1aUKIru_mEuhUolGIRzpTXZOWAR30AUY-'; 
+            // ---------------------
+
+            const container = document.getElementById('game-container');
+            
+            // Check if the nostalgist object loaded correctly
+            if (typeof nostalgist === 'undefined') {
+                container.innerHTML = `
+                    <div class="container-message text-red-400">
+                        <p class="font-bold text-xl">Preview Error: Script Blocked</p>
+                        <p class="text-sm mt-2">
+                            The code editor environment is blocking the Nostalgist.js script. 
+                            <br>This file is ready for **external hosting**.
+                        </p>
+                        <p class="text-sm mt-3 text-blue-300">
+                            **Next Step:** Upload this file to GitHub Pages and embed the resulting URL.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Replace the initial message with the actual launch process message
+            container.innerHTML = `<div id="game-container-status" class="container-message">Initializing ${YOUR_CORE} core...</div>`;
+
+            nostalgist.launch({
+                core: YOUR_CORE,
+                rom: YOUR_ROM_URL, 
+                element: container,
+            })
+            .then(() => {
+                console.log('Nostalgist launched successfully!');
+                // If successful, the emulator screen takes over the container
+            })
+            .catch(error => {
+                console.error('Failed to launch Nostalgist:', error);
+                // Clear the container and show a detailed error
+                container.innerHTML = `
+                    <div class="container-message text-red-500">
+                        <p class="font-bold text-lg">Emulator Launch Failed</p>
+                        <p class="text-sm mt-2">Possible Issues (Check AFTER Hosting):</p>
+                        <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
+                            <li>Google Drive File: Is it set to **"Anyone with the link"**?</li>
+                            <li>ROM File: Is it a valid Mega Drive ROM (e.g., .bin, .md)?</li>
+                        </ul>
+                        <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
+                    </div>
+                `;
+            });
+        });
+    </script>
+
+</body>
+</html>
