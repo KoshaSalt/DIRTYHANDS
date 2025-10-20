@@ -51,7 +51,7 @@
         <h1 class="text-4xl font-extrabold text-blue-400">DIRTYHANDS Mega Drive Emulator</h1>
         <p class="text-lg mt-2 text-gray-300">Play the demo of DIRTYHANDS directly in your browser.</p>
         <p class="text-sm mt-1 text-red-400 font-semibold">
-            Please ensure your ROM is publicly accessible from Google Drive.
+            **Action Required:** Please upload the ROM file (`dirtyhands.bin` or similar) to your GitHub repo root.
         </p>
     </header>
 
@@ -74,8 +74,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- CONFIGURATION ---
             const YOUR_CORE = 'genesis_plus_gx'; 
-            // The required direct download URL for your Google Drive file ID
-            const YOUR_ROM_URL = 'https://drive.google.com/uc?export=download&id=1aUKIru_mEuhUolGIRzpTXZOWAR30AUY-'; 
+            // The ROM is now expected to be in the same folder as index.html (e.g., on GitHub Pages)
+            const YOUR_ROM_FILENAME = 'dirtyhands.bin'; 
+            const YOUR_ROM_URL = `./${YOUR_ROM_FILENAME}`; 
             const NOSTALGIST_CDN = 'https://unpkg.com/nostalgist@latest/dist/nostalgist.umd.js';
             // ---------------------
 
@@ -101,10 +102,10 @@
                     container.innerHTML = `
                         <div class="container-message text-red-500">
                             <p class="font-bold text-lg">Emulator Launch Failed</p>
-                            <p class="text-sm mt-2">Possible Issues (Check AFTER Hosting):</p>
+                            <p class="text-sm mt-2">Possible Issues:</p>
                             <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
-                                <li>Google Drive File: Is it set to **"Anyone with the link"**?</li>
-                                <li>ROM File: Is it a valid Mega Drive ROM (e.g., .bin, .md)?</li>
+                                <li>**Missing File:** Is the ROM file named **${YOUR_ROM_FILENAME}** and uploaded to your GitHub repo root?</li>
+                                <li>ROM Format: Is the file a valid Mega Drive ROM (.bin, .md, etc.)?</li>
                             </ul>
                             <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
                         </div>
@@ -118,7 +119,6 @@
                 script.src = url;
                 
                 // FIX: Use setTimeout(0) to defer the callback to the end of the current task queue.
-                // This ensures the nostalgist global object is registered before we try to use it.
                 script.onload = () => {
                     setTimeout(() => {
                         if (typeof nostalgist !== 'undefined') {
