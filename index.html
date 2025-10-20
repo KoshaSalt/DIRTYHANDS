@@ -68,8 +68,7 @@
         </ul>
     </div>
 
-    <!-- STEP 1: Load the Nostalgist.js library from CDN -->
-    <!-- Switched to jsDelivr CDN -->
+    <!-- STEP 1: Load the Nostalgist.js library from the primary CDN -->
     <script src="https://cdn.jsdelivr.net/npm/nostalgist@latest/dist/nostalgist.umd.js"></script>
 
     <script>
@@ -131,8 +130,8 @@
                 } else if (totalWaitTime >= MAX_WAIT_TIME) {
                     // Timeout
                     displayError(
-                        "CDN Script Blocked or Failed",
-                        `The CDN script failed to load or execute within 10 seconds. This confirms the original issue: The external host is blocking the CDN link.`
+                        "CDN Script Blocked",
+                        `The CDN script failed to load or execute within 10 seconds. You MUST switch to **Local Hosting** (see instructions below).`
                     );
                 } else {
                     // Not ready, keep waiting
