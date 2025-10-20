@@ -2819,7 +2819,7 @@
      * ```js
      * const nostalgist = await Nostalgist.nes('flappybird.nes')
      *
-     * const Sram = await nostalgist.saveSRAM()
+     * const sram = await nostalgist.saveSRAM()
      * ```
      */
     async saveSRAM() {
