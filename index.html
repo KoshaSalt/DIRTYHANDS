@@ -1,106 +1,151 @@
-<div class="container small">
-  <h1 class="text-center mt-3">Nostalgist.js example</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRTYHANDS Mega Drive Demo</title>
+    <!-- We'll use a simple, clean aesthetic -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1f2937; /* Dark gray background */
+            font-family: 'Inter', sans-serif;
+            color: #f3f4f6;
+            padding: 20px;
+        }
+        /* Style the actual emulator container */
+        #game-container {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            aspect-ratio: 4/3; /* Standard resolution aspect ratio */
+            background-color: #000;
+            border: 8px solid #000;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            overflow: hidden; /* Ensure content stays within borders */
+        }
+        /* Center message before loading */
+        .container-message {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 1.25rem;
+            color: #9ca3af;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
 
-  <hr />
+    <header class="text-center mb-8">
+        <h1 class="text-4xl font-extrabold text-blue-400">DIRTYHANDS Mega Drive Emulator</h1>
+        <p class="text-lg mt-2 text-gray-300">Play the demo of DIRTYHANDS directly in your browser.</p>
+        <p class="text-sm mt-1 text-red-400 font-semibold">
+            **FINAL ACTION REQUIRED:** Please upload the ROM file (`dirtyhands.bin`) to your GitHub repo root.
+        </p>
+    </header>
 
-  <h2>Input mapping</h2>
-  <div class="alert alert-light" role="alert">
-    <p>
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-round-up.svg"
-        alt="gamepad-round-up icon"
-      />
-      - <kbd>up</kbd>
-      |
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-round-down.svg"
-        alt="gamepad-round-down icon"
-      />
-      - <kbd>down</kbd>
-      |
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-round-left.svg"
-        alt="gamepad-round-left icon"
-      />
-      - <kbd>left</kbd>
-      |
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-round-right.svg"
-        alt="gamepad-round-right icon"
-      />
-      - <kbd>right</kbd>
-    </p>
-    <p>
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-circle-left.svg"
-        alt="gamepad-circle-left icon"
-      />
-      - <kbd>A</kbd>
-      |
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-circle-up.svg"
-        alt="gamepad-circle-up icon"
-      />
-      - <kbd>S</kbd>
-      |
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-circle-down.svg"
-        alt="gamepad-circle-down icon"
-      />
-      - <kbd>Z</kbd>
-      |
-      <img
-        src="https://cdn.jsdelivr.net/npm/@mdi/svg@7.3.67/svg/gamepad-circle-right.svg"
-        alt="gamepad-circle-right icon"
-      />
-      - <kbd>X</kbd>
-    </p>
-    <p>
-      <kbd>start</kbd> - <kbd>Enter</kbd>
-      |
-      <kbd>select</kbd> - <kbd>Shift</kbd>
-    </p>
-    <p>Press <kbd>Esc</kbd> to quit a game while playing.</p>
-  </div>
-  <div class="alert alert-light" role="alert">
-    You can also use a real game controller.
-  </div>
-
-  <h3>Games</h3>
-  <div class="alert alert-light" role="alert">
-    Games bellow are all loaded from
-    <a href="https://retrobrews.github.io/">retrobrews</a>.
-  </div>
-
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <button class="nav-link active">NES</button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link">SNES</button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link">GBC</button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link">GBA</button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link">Genesis</button>
-    </li>
-  </ul>
-
-  <div class="tab-content">
-    <div class="tab-pane fade show active">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Game</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div id="game-container">
+        <div id="game-container-text" class="container-message">Waiting for Nostalgist to load from CDN...</div>
     </div>
-  </div>
-</div>
+    
+    <div class="mt-6 p-4 bg-gray-700 rounded-xl shadow-lg w-full max-w-lg">
+        <h2 class="text-xl font-bold text-gray-100 mb-2">Controls:</h2>
+        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
+            <li>**D-Pad/Movement:** Arrow Keys (Up, Down, Left, Right)</li>
+            <li>**A/B/C Buttons:** Z, X, C</li>
+            <li>**Start Button:** Enter/Return</li>
+        </ul>
+    </div>
+
+    <!-- STEP 1: Load the Nostalgist.js library from CDN -->
+    <!-- This will likely be blocked in the preview, but should work on an unblocked external site. -->
+    <script src="https://unpkg.com/nostalgist@latest/dist/nostalgist.umd.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            const YOUR_CORE = 'genesis_plus_gx'; 
+            const YOUR_ROM_FILENAME = 'dirtyhands.bin'; 
+            const YOUR_ROM_URL = `./${YOUR_ROM_FILENAME}`; 
+            // ---------------------
+
+            const container = document.getElementById('game-container');
+            const MAX_WAIT_TIME = 10000; // 10 seconds timeout
+            let totalWaitTime = 0;
+            
+            // Function to display an error
+            const displayError = (message, details) => {
+                container.innerHTML = `
+                    <div class="container-message text-red-500">
+                        <p class="font-bold text-xl">Fatal Error</p>
+                        <p class="text-lg mt-2">${message}</p>
+                        <p class="text-xs mt-3 text-red-400">${details}</p>
+                    </div>
+                `;
+            };
+
+            // 1. Function to attempt launching the emulator
+            function launchEmulator() {
+                document.getElementById('game-container-text').textContent = "Initializing core and loading ROM...";
+
+                nostalgist.launch({
+                    core: YOUR_CORE,
+                    rom: YOUR_ROM_URL, 
+                    element: container,
+                })
+                .then(() => {
+                    console.log('Nostalgist launched successfully!');
+                })
+                .catch(error => {
+                    console.error('Failed to launch Nostalgist:', error);
+                    container.innerHTML = `
+                        <div class="container-message text-red-500">
+                            <p class="font-bold text-lg">Emulator Launch Failed</p>
+                            <p class="text-sm mt-2">Possible Issues:</p>
+                            <ul class="list-disc list-inside text-left mx-auto max-w-xs text-gray-300 mt-2">
+                                <li>**Missing ROM:** Is **${YOUR_ROM_FILENAME}** uploaded to your GitHub repo root?</li>
+                                
+**Core/Assets:** The Core failed to download (this requires a network connection to the CDN).
+                            </ul>
+                            <p class="text-xs mt-3 text-red-400">Error Detail: ${error.message}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            // 2. Polling function to wait for the global 'nostalgist' object
+            function waitForNostalgist() {
+                if (typeof nostalgist !== 'undefined') {
+                    // Success! The library is ready.
+                    launchEmulator();
+                } else if (totalWaitTime >= MAX_WAIT_TIME) {
+                    // Timeout
+                    displayError(
+                        "CDN Script Blocked or Failed",
+                        `The CDN script failed to load or execute within 10 seconds. This confirms the original issue: The external host is blocking the CDN link.`
+                    );
+                } else {
+                    // Not ready, keep waiting
+                    totalWaitTime += 100;
+                    setTimeout(waitForNostalgist, 100);
+                }
+            }
+
+            // Start the waiting process immediately
+            waitForNostalgist();
+        });
+    </script>
+
+</body>
+</html>
