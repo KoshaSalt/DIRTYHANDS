@@ -79,6 +79,7 @@
             const YOUR_ROM_FILENAME = 'dirtyhands.bin'; 
             const YOUR_ROM_URL = `./${YOUR_ROM_FILENAME}`; 
             const NOSTALGIST_LIB_PATH = './nostalgist.js';
+            const MIN_NOSTALGIST_SIZE = 500 * 1024; // Check if file is at least 500KB (approx size of the minified library)
             // ---------------------
 
             const container = document.getElementById('game-container');
@@ -133,7 +134,7 @@
                     // Timeout
                     displayError(
                         "Library Execution Failed",
-                        `The nostalgist.js file was found but failed to execute within 10 seconds. Check its contents for errors.`
+                        `The nostalgist.js file was found but failed to execute within 10 seconds. This usually means the file content is incorrect or corrupted.`
                     );
                 } else {
                     // Not ready, keep waiting
@@ -142,7 +143,7 @@
                 }
             }
 
-            // 3. Proactive check for the nostalgist.js file presence
+            // 3. Proactive check for the nostalgist.js file presence and size
             fetch(NOSTALGIST_LIB_PATH)
                 .then(response => {
                     if (response.status === 404) {
@@ -156,9 +157,21 @@
                             `Could not access the file at ${NOSTALGIST_LIB_PATH}. Status: ${response.status} ${response.statusText}`
                         );
                     } else {
-                        // The file exists and is accessible. Now start waiting for it to execute.
-                        document.getElementById('game-container-text').textContent = "Library file found. Waiting for execution...";
-                        waitForNostalgist();
+                        // Check content length to ensure it's the full library, not a placeholder
+                        response.text().then(text => {
+                            if (text.length < MIN_NOSTALGIST_SIZE) {
+                                displayError(
+                                    "nostalgist.js Content Too Small!",
+                                    `The file is only ${Math.round(text.length / 1024)}KB. It MUST contain the full code from https://unpkg.com/nostalgist@latest/dist/nostalgist.umd.js (approx 500KB+).`
+                                );
+                            } else {
+                                // The file exists, is accessible, and has the correct size. Now start waiting for it to execute.
+                                document.getElementById('game-container-text').textContent = "Library file found and verified. Waiting for execution...";
+                                waitForNostalgist();
+                            }
+                        }).catch(e => {
+                            displayError("Content Read Error", `Failed to read content length of nostalgist.js: ${e.message}`);
+                        });
                     }
                 })
                 .catch(error => {
