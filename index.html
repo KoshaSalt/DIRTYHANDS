@@ -1,2 +1,63 @@
-<script src="https://unpkg.com/nostalgist"></script>
-await Nostalgist.nes('flappybird')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shorne - Sega Genesis in Browser</title>
+    <style>
+        /* Optional: Basic styling to make the page look clean */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            font-family: monospace;
+            flex-direction: column;
+        }
+        /* This is the container where the emulator canvas will be placed */
+        #nostalgist-container {
+            width: 800px; /* Set a default size */
+            height: 600px;
+            max-width: 90vw;
+            max-height: 90vh;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 4px solid #4CAF50; /* Green border for a retro look */
+        }
+    </style>
+</head>
+<body>
+    <h1>Loading Shorne: Dirty Hands...</h1>
+    <div id="nostalgist-container"></div>
+
+    <script src="https://unpkg.com/nostalgist"></script>
+
+    <script>
+        async function launchEmulator() {
+            // THE FILENAME HAS BEEN UPDATED HERE:
+            const romFilename = 'dirtyhands.bin';
+
+            try {
+                // The Nostalgist.megadrive() API is used for Sega Genesis/Mega Drive.
+                await Nostalgist.megadrive(romFilename, {
+                    // Tell Nostalgist to place the emulator inside our container div
+                    element: document.getElementById('nostalgist-container')
+                });
+                
+                // Remove the "Loading" header once the game is running
+                document.querySelector('h1').style.display = 'none';
+                console.log(`Sega Genesis game (${romFilename}) launched successfully!`);
+                
+            } catch (error) {
+                console.error("Failed to launch emulator:", error);
+                document.querySelector('h1').textContent = `Error: Failed to load ${romFilename}. Check console for details.`;
+            }
+        }
+
+        launchEmulator();
+    </script>
+
+</body>
+</html>
