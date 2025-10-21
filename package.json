@@ -1,0 +1,18 @@
+
+{
+  "name": "dirtyhands-web-emulator",
+  "version": "1.0.0",
+  "description": "Dirtyhands web emulator using Nostalgist.js",
+  "main": "index.js",
+  "type": "module", 
+  "scripts": {
+    "start": "open index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nostalgist": "^0.23.0" 
+  }
+}
