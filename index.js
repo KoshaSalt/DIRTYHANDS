@@ -1,32 +1,33 @@
 // index.js
 
-// Imports the Nostalgist library installed via npm
-import { Nostalgist } from 'nostalgist';
+// REMOVE: import { Nostalgist } from 'nostalgist';
 
-async function launchDirtyhands() {
+// The function is now a standard script that runs after the page loads
+function launchDirtyhands() {
     const romFilename = 'dirtyhands.bin';
 
-    try {
-        // Launches the Sega Genesis emulator
-        await Nostalgist.launch({
-            core: 'genesis_plus_gx', 
-            rom: romFilename,
-            element: document.getElementById('game-container'),
-            retroarchConfig: {
-                // Explicitly use a reliable public CDN for The Core files 
-                // to prevent GitHub Pages 403/Not Found errors.
-                cdnUrl: 'https://cdn.jsdelivr.net/npm/nostalgist@latest/dist/' 
-            }
-        });
+    // We use a listener to ensure all HTML and script dependencies (like Nostalgist) are ready
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // Nostalgist is available globally here
+            await Nostalgist.launch({
+                core: 'genesis_plus_gx', 
+                rom: romFilename,
+                element: document.getElementById('game-container'),
+                retroarchConfig: {
+                    // This explicitly sets a reliable CDN URL for the core files (fixing your 403 issues)
+                    cdnUrl: 'https://cdn.jsdelivr.net/npm/nostalgist@latest/dist/' 
+                }
+            });
 
-        // Hide the loading header on successful launch
-        document.querySelector('h1').style.display = 'none';
-        console.log(`Dirtyhands launched successfully using genesis_plus_gx core.`);
+            document.querySelector('h1').style.display = 'none';
+            console.log(`Dirtyhands launched successfully.`);
 
-    } catch (error) {
-        console.error("Failed to launch emulator:", error);
-        document.querySelector('h1').textContent = 'Error: Failed to launch Dirtyhands. Check console for details.';
-    }
+        } catch (error) {
+            console.error("Failed to launch emulator:", error);
+            document.querySelector('h1').textContent = 'Error: Failed to launch Dirtyhands. Check console for details.';
+        }
+    });
 }
 
 launchDirtyhands();
