@@ -1,21 +1,23 @@
 // index.js
 
-// REMOVE: import { Nostalgist } from 'nostalgist';
+// 🚨🚨 DELETE THIS LINE: import { Nostalgist } from 'nostalgist'; 🚨🚨
 
-// The function is now a standard script that runs after the page loads
+// The 'Nostalgist' object is now available globally because it was loaded 
+// via the <script src="https://unpkg.com/nostalgist"></script> tag in index.html.
+
 function launchDirtyhands() {
     const romFilename = 'dirtyhands.bin';
 
     // We use a listener to ensure all HTML and script dependencies (like Nostalgist) are ready
     document.addEventListener('DOMContentLoaded', async () => {
         try {
-            // Nostalgist is available globally here
+            // Note: Nostalgist is used directly here
             await Nostalgist.launch({
                 core: 'genesis_plus_gx', 
                 rom: romFilename,
                 element: document.getElementById('game-container'),
                 retroarchConfig: {
-                    // This explicitly sets a reliable CDN URL for the core files (fixing your 403 issues)
+                    // Ensures core assets load correctly from a stable CDN
                     cdnUrl: 'https://cdn.jsdelivr.net/npm/nostalgist@latest/dist/' 
                 }
             });
