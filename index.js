@@ -1,19 +1,18 @@
 // index.js
+// This function will only run AFTER the entire page has loaded, 
+// guaranteeing the 'game-container' element exists.
 
-// 1. DELETE the 'import' line if it is still present.
-// 2. The function is now asynchronous and runs immediately when the script is reached.
-
-async function launchDirtyhands() {
+window.onload = async function launchDirtyhands() {
     const romFilename = 'dirtyhands.bin';
 
     try {
-        // The element #game-container is guaranteed to exist because the script is at the end of <body>
         await Nostalgist.launch({
             core: 'genesis_plus_gx', 
             rom: romFilename,
-            element: document.getElementById('game-container'), // THIS should now find the element
+            // The element is now guaranteed to be found
+            element: document.getElementById('game-container'), 
             retroarchConfig: {
-                // Ensures core assets load correctly from a stable CDN
+                // Stable CDN URL for core assets
                 cdnUrl: 'https://cdn.jsdelivr.net/npm/nostalgist@latest/dist/' 
             }
         });
@@ -25,6 +24,4 @@ async function launchDirtyhands() {
         console.error("Failed to launch emulator:", error);
         document.querySelector('h1').textContent = 'Error: Failed to launch Dirtyhands. Check console for details.';
     }
-}
-
-launchDirtyhands();
+};
